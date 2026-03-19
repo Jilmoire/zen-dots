@@ -1,4 +1,4 @@
-import fabric # importing the base package
+import fabric # base package
 from fabric import Application
 from fabric.widgets.wayland import WaylandWindow as Window 
 from fabric.widgets.datetime import DateTime
@@ -12,34 +12,54 @@ class StatusBar(Window):
     def __init__(self, **kwargs):
         super().__init__(
             layer="top",  # Ensure it stays above other apps
-            anchor="left bottom right",  # Anchors the bar at the top, stretching from left to right
-            exclusivity="auto",  # Reserves space for the bar so it behaves like a normal window
+            anchor="left bottom right",  # Anchors the bar at the bottom, stretching from left to right
+            exclusivity="auto",  # Reserves space for the bar
             **kwargs
         )
 
         leftContainer = Box(
             spacing=10,
             children =[
-                Button()
+                Button(label="Distro Icon(notif center)"),
+                Box(
+                    children=[
+                        Button(label="●"), # Workspace 1 (Filled circle for "active")
+                        Button(label="○"), # Workspace 2 (Empty circle)
+                        Button(label="○"), # Workspace 3
+                        Button(label="○"), # Workspace 4
+                        Button(label="○"), # Workspace 5
+                    ]
+                ),
+                Button(label="music widget")
             ]
         )
 
         centerContainer = Box(
-            orientation="h",   # Locks it side-by-side
             spacing=10,
             children=[
-                Button(label="Previous"), 
-                DateTime(formatters=["%I:%M %p  -  %A, %B %d"]),
-                Button(label="Next")
+                Label(label="focused window icon  · "), 
+                DateTime(formatters=["%H:%M - %B %d"])
             ]
         )
 
         rightContainer = Box(
             spacing=10,
-            children =[
-                Button(),
-                Button()
-            ]
+            children=(
+                Button(label="tray"),
+                Box(
+                    children =[
+                        Button(label="wifi"),
+                        Button(label="sound"),
+                        Button(label="battery"),
+                    ]
+                ),
+                Box(
+                    children =[
+                        Button(label="controlcenter"),
+                        Button(label="power")
+                    ]
+                )
+            )
         )
 
         barLayout = CenterBox(
@@ -49,9 +69,6 @@ class StatusBar(Window):
         )
 
         self.add(barLayout)
-
-       # self.date_time = DateTime()
-       # self.children = CenterBox(center_children=self.date_time)  # Adds the CenterBox with date_time in the center of the bar
 
 if __name__ == "__main__":
     bar = StatusBar()
