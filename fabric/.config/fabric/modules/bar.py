@@ -1,4 +1,5 @@
 import fabric # base package
+
 from fabric import Application
 from fabric.widgets.wayland import WaylandWindow as Window 
 from fabric.widgets.datetime import DateTime
@@ -44,7 +45,7 @@ class StatusBar(Window):
 
         rightContainer = Box(
             spacing=10,
-            children=(
+            children=[
                 Button(label="tray"),
                 Box(
                     children =[
@@ -59,7 +60,7 @@ class StatusBar(Window):
                         Button(label="power")
                     ]
                 )
-            )
+            ]
         )
 
         barLayout = CenterBox(
