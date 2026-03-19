@@ -1,13 +1,13 @@
 import os
 os.environ["GDK_BACKEND"] = "wayland"
 
-import fabric # importing the base package
+import fabric # base package
 from fabric import Application
 
 from modules import StatusBar# , ControlCenter, NotificationCenter
 
 if __name__ == "__main__":
-    # 1. Initialize all your modular widgets
+    # initialize components
     bar = StatusBar()
     #control_center = ControlCenter()
     #notif_center = NotificationCenter()
