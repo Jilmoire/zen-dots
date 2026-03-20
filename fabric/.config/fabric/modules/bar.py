@@ -1,5 +1,7 @@
-import fabric # base package
+import subprocess
+from services import audioManager, batteryWidget, wifiWidget
 
+import fabric # base package
 from fabric import Application
 from fabric.widgets.wayland import WaylandWindow as Window 
 from fabric.widgets.datetime import DateTime
@@ -7,7 +9,6 @@ from fabric.widgets.button import Button
 from fabric.widgets.box import Box
 from fabric.widgets.centerbox import CenterBox
 from fabric.widgets.label import Label
-
 
 class StatusBar(Window):
     def __init__(self, **kwargs):
@@ -49,15 +50,17 @@ class StatusBar(Window):
                 Button(label="tray"),
                 Box(
                     children =[
-                        Button(label="wifi"),
-                        Button(label="sound"),
-                        Button(label="battery"),
+                        wifiWidget(),
+                        audioManager(),
+                        batteryWidget(),
                     ]
                 ),
                 Box(
                     children =[
                         Button(label="controlcenter"),
-                        Button(label="power")
+                        Button(label="⏻", 
+                        on_clicked=lambda *_: subprocess.Popen(["wlogout"])
+                        )
                     ]
                 )
             ]

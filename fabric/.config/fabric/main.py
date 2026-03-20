@@ -1,3 +1,7 @@
+from modules import StatusBar# , ControlCenter, NotificationCenter
+from services import audioManager
+from services import batteryWidget
+
 import os
 os.environ["GDK_BACKEND"] = "wayland"
 
@@ -5,7 +9,6 @@ import fabric # base package
 from fabric import Application
 from fabric.utils import set_stylesheet_from_file
 
-from modules import StatusBar# , ControlCenter, NotificationCenter
 
 if __name__ == "__main__":
     # initialize components
