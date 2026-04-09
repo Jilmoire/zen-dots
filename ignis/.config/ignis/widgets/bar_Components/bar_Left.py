@@ -6,11 +6,9 @@ from ignis.widgets import Widget
 niri = NiriService.get_default()
 notifications = NotificationService.get_default()
 
-def left():
-    workspaces = Widget.Box(
-        spacing=8
-    )
 
+def left():
+    workspaces = Widget.Box()
     def update_Workspaces(*_):
 
         buttons = []
@@ -26,6 +24,9 @@ def left():
 
     niri.connect("notify::workspaces", update_Workspaces),
     niri.connect("notify::focused-workspace", update_Workspaces)
-    
     update_Workspaces()
+
+    def notif_Center():
+        pass
+
     return workspaces
