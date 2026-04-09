@@ -7,26 +7,67 @@ niri = NiriService.get_default()
 notifications = NotificationService.get_default()
 
 
-def left():
-    workspaces = Widget.Box()
-    def update_Workspaces(*_):
+class Workspaces(Widget.Box):
+    def __init__(self):
+        super().__init__()
+        niri.connect("notify::workspaces", self.update)
+        niri.connect("notify::focused-workspace", self.update)
+        
+        self.update()
 
+    def update(self, *args):
         buttons = []
         for workspace in niri.workspaces:
             icon = "●" if workspace.is_active else "○"
-    
             button = Widget.Button(
-                        child=Widget.Label(label=f"{icon}"),
-                        on_click=lambda _, w=workspace: w.activate(),
-                 )
+                child = Widget.Label(label=icon),
+                on_click=lambda _, w = workspace: w.switch_to(),
+            )
             buttons.append(button)
-        workspaces.child = buttons
+        
+        self.child = buttons
 
-    niri.connect("notify::workspaces", update_Workspaces),
-    niri.connect("notify::focused-workspace", update_Workspaces)
-    update_Workspaces()
+class NotificationMenu(Widget.RevealerWindow):
+    def __init__(self):
+        self.notif_menu = Widget.Button(
+            child = Widget.Label(label="🔔"),
+            on_click=lambda _: self.toggle_menu(),
+        )
+        notifContent = Widget.Box(
+                            vertical=True,
+                            child=[
+                                Widget.Label(label="Notifications"),
+                                Widget.Separator(orientation="horizontal"),
+                                Widget.Label(label="No new messages"),
+                            ],
+                        )
+        revealer = Widget.Revealer(
+            transition_type = "slide_up",
+            transition_duration = 300,
+            reveal_child = True,
+            child = notifContent
+        )
+        box = Widget.Box(child = [revealer])
+        super().__init__(
+            namespace = "notification-menu",
+            visible = False,
+            child = box,
+            anchor = ["left", "bottom"],
+            revealer = revealer
+        )
+        self.notifContent = notifContent
+        self.revealer = revealer
 
-    def notif_Center():
-        pass
+    def toggle_menu(self):
+        self.visible = not self.visible
 
-    return workspaces
+notif_menu = NotificationMenu()
+
+def left():
+    return Widget.Box(
+        spacing = 10,
+        child=[
+            notif_menu.notif_menu,
+            Workspaces()
+        ]
+    )
